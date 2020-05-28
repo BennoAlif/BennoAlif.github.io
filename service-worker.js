@@ -29,8 +29,36 @@ workbox.precaching.precacheAndRoute([
 ]);
 
 workbox.routing.registerRoute(
-  new RegExp("/pages/"),
+  /\.(?:png|gif|jpg|jpeg|svg)$/,
+  workbox.strategies.cacheFirst({
+    cacheName: "images",
+    plugins: [
+      new workbox.expiration.Plugin({
+        maxEntries: 60,
+        maxAgeSeconds: 30 * 24 * 60 * 60,
+      }),
+    ],
+  })
+);
+
+workbox.routing.registerRoute(
+  new RegExp("https://api.football-data.org/v2/"),
   workbox.strategies.staleWhileRevalidate()
+);
+
+workbox.routing.registerRoute(
+  new RegExp(".*.js"),
+  workbox.strategies.cacheFirst()
+);
+
+workbox.routing.registerRoute(
+  new RegExp("/css/materialize.min.css"),
+  workbox.strategies.cacheFirst()
+);
+
+workbox.routing.registerRoute(
+  new RegExp(".*.png"),
+  workbox.strategies.cacheFirst()
 );
 
 workbox.routing.registerRoute(
