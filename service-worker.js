@@ -39,3 +39,22 @@ workbox.routing.registerRoute(
     cacheName: "pages",
   })
 );
+
+self.addEventListener("push", (e) => {
+  let body;
+  if (e.data) {
+    body = e.data.text();
+  } else {
+    body = "Push message no payload";
+  }
+  const options = {
+    body: body,
+    icon: "assets/icons/icon-96x96.png",
+    vibrate: [100, 50, 100],
+    data: {
+      dateOfArrival: Date.now(),
+      primaryKey: 1,
+    },
+  };
+  e.waitUntil(self.registration.showNotification("Notification", options));
+});
